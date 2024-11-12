@@ -17,10 +17,10 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    public UserController(UserService userService){
-
-        this.userService=userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
+
     // GET endpoint to retrieve all users
     @GetMapping
     public List<UserEntity> getAllUsers() {
@@ -35,7 +35,7 @@ public class UserController {
         // Check if the response is not null (indicating a successful creation)
         if (response != null) {
             // Return a 201 Created status code along with the created user data
-            return ResponseEntity.status(HttpStatus.CREATED).body((UserResponse) response);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } else {
             // Handle the case where the creation was not successful (e.g., validation failed)
             // You can return a different status code or error message as needed
@@ -43,4 +43,24 @@ public class UserController {
         }
     }
 
+
+    @PutMapping("/updateStatus")
+    public ResponseEntity<String> updateStatus(@RequestParam Long userId, @RequestParam String status) {
+        try {
+            UserResponse updateResponse = userService.updateStatus(userId, status);
+            if (updateResponse != null) {
+                return ResponseEntity.status(HttpStatus.OK).body("User status has been updated.");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        }
+
+    }
+
+
 }
+
+
